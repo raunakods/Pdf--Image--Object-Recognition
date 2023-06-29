@@ -1,0 +1,28 @@
+import cv2
+from pdf2image import convert_from_path
+import pytesseract
+import os
+
+# Path to your PDF file
+pdf_path = 'path/to/your/pdf/file.pdf'
+
+# Convert PDF pages to images
+images = convert_from_path(pdf_path)
+
+# Iterate over each image and perform object recognition
+for i, image in enumerate(images):
+    # Save image as temporary file
+    temp_image_path = f'temp_image_{i}.jpg'
+    image.save(temp_image_path, 'JPEG')
+    
+    # Load image using OpenCV
+    img = cv2.imread(temp_image_path)
+    
+    # Perform OCR on the image
+    text = pytesseract.image_to_string(img)
+    
+    # Print the extracted text
+    print(f'Page {i+1}:\n{text}\n')
+    
+    # Delete the temporary image file
+    os.remove(temp_image_path)
